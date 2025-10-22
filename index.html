@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planetario Interactivo</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #000011, #001133);
+            color: white;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            background-color: #111155;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .planetas {
+            margin: 40px;
+        }
+
+        button {
+            background-color: #0044cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0077ff;
+        }
+
+        .info-planeta {
+            margin: 30px auto;
+            width: 80%;
+            background-color: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        footer {
+            background-color: #111155;
+            padding: 15px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Planetario Interactivo</h1>
+        <p>Explora el sistema solar y descubre datos fascinantes de los planetas.</p>
+    </header>
+
+    <main>
+        <section class="planetas">
+            <button onclick="mostrarInfo('Mercurio')">Mercurio</button>
+            <button onclick="mostrarInfo('Venus')">Venus</button>
+            <button onclick="mostrarInfo('Tierra')">Tierra</button>
+            <button onclick="mostrarInfo('Marte')">Marte</button>
+            <button onclick="mostrarInfo('Júpiter')">Júpiter</button>
+            <button onclick="mostrarInfo('Saturno')">Saturno</button>
+            <button onclick="mostrarInfo('Urano')">Urano</button>
+            <button onclick="mostrarInfo('Neptuno')">Neptuno</button>
+        </section>
+
+        <section id="info-planeta" class="info-planeta">
+            <h2>Selecciona un planeta</h2>
+            <p>Haz clic en un planeta para conocer más información sobre él.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Planetario Interactivo | Creado con HTML, CSS y JavaScript</p>
+    </footer>
+
+    <script>
+        const planetas = {
+            'Mercurio': 'Mercurio es el planeta más cercano al Sol y el más pequeño del sistema solar.',
+            'Venus': 'Venus es el planeta más caliente, con una atmósfera densa y rica en dióxido de carbono.',
+            'Tierra': 'La Tierra es el único planeta conocido que alberga vida y tiene agua líquida en su superficie.',
+            'Marte': 'Marte es conocido como el planeta rojo por su superficie rica en óxido de hierro.',
+            'Júpiter': 'Júpiter es el planeta más grande del sistema solar y tiene una gran mancha roja, una tormenta gigante.',
+            'Saturno': 'Saturno es famoso por sus impresionantes anillos compuestos principalmente de hielo y polvo.',
+            'Urano': 'Urano tiene un color azul verdoso y rota de lado, algo único entre los planetas del sistema solar.',
+            'Neptuno': 'Neptuno es el planeta más lejano y es conocido por sus intensos vientos y color azul profundo.'
+        };
+
+        function mostrarInfo(planeta) {
+            const info = document.getElementById('info-planeta');
+            info.innerHTML = `<h2>${planeta}</h2><p>${planetas[planeta]}</p>`;
+        }
+    </script>
+</body>
+</html>
