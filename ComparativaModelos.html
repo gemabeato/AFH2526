@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Comparativa de modelos de IA - Windows vs Mac mini</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-page: #f3f4ff;
+      --bg-panel: #ffffff;
+      --border-panel: #e5e7ff;
+      --text-main: #1e293b;
+      --text-muted: #6b7280;
+      --accent-1: #a5b4fc;
+      --accent-2: #f9a8d4;
+      --accent-3: #6ee7b7;
+      --accent-4: #fbbf24;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: radial-gradient(circle at top, #e0e7ff 0, #f9fafb 55%);
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+    h1, h2, h3, h4 {
+      margin-top: 0;
+      font-weight: 700;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #1f2937;
+    }
+    h2 {
+      font-size: 1.4rem;
+      margin-top: 2rem;
+      margin-bottom: 0.4rem;
+      color: #4f46e5;
+    }
+    h3 {
+      font-size: 1.1rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.3rem;
+      color: #374151;
+    }
+    h4 {
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+      color: #4b5563;
+    }
+    p {
+      margin: 0.4rem 0;
+      color: var(--text-main);
+    }
+    .subtitulo {
+      margin-bottom: 24px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .panel {
+      margin: 20px 0;
+      padding: 18px 20px 24px;
+      border-radius: 16px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-panel);
+      box-shadow: 0 16px 40px rgba(148, 163, 184, 0.25);
+    }
+    .panel p {
+      margin-top: 4px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .filtros {
+      margin: 10px 0 14px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    select {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid #c7d2fe;
+      background: #eef2ff;
+      color: #111827;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    select:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.3);
+    }
+    canvas {
+      max-width: 900px;
+      max-height: 420px;
+      margin-top: 4px;
+    }
+    ul {
+      margin: 0.3rem 0 0.6rem 1.2rem;
+    }
+    li {
+      margin: 0.15rem 0;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      margin-left: 8px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #4338ca;
+    }
+    .tag.est1 {
+      border-color: #7dd3fc;
+      color: #0369a1;
+      background: #e0f2fe;
+    }
+    .tag.est2 {
+      border-color: #6ee7b7;
+      color: #047857;
+      background: #dcfce7;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      text-align: center;
+    }
+    th {
+      background: #eef2ff;
+      font-weight: 600;
+      color: #374151;
+    }
+    tbody tr:nth-child(odd) {
+      background: #f9fafb;
+    }
+    tbody tr:nth-child(even) {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <h1>COMPARATIVA DE MODELOS DE IA EN LA RESOLUCIÓN DE ADIVINANZAS</h1>
+  <p class="subtitulo">Gema Beato · 2 ASIR · Windows · Mac mini </p>
+
+  <!-- 1. Introducción -->
+  <h2>1. Introducción</h2>
+  <p>
+    Se comparan los modelos Qwen3-VL-4B, IBM Granite-4-H-Tiny y Mistral 3B resolviendo y creando adivinanzas, analizando velocidad, precisión y estilo en dos entornos: Windows y Mac mini.
+  </p>
+
+  <!-- 2. Modelos evaluados -->
+  <h2>2. Modelos evaluados</h2>
+  <ul>
+    <li><strong>Qwen3-VL-4B</strong>: Modelo multimodal de 4B parámetros para visión y lenguaje, con buena capacidad de razonamiento.</li>
+    <li><strong>IBM Granite-4-H-Tiny</strong>: Modelo híbrido eficiente de 7B parámetros, optimizado para baja latencia y bajo consumo.</li>
+    <li><strong>Mistral 3B</strong>: Modelo compacto de 3B parámetros enfocado en velocidad y eficiencia.</li>
+  </ul>
+
+  <!-- 3. Prompts utilizados -->
+  <h2>3. Prompts utilizados</h2>
+
+  <h3>3.1 Prompt corto</h3>
+  <p><em>Eres un experto en resolver y crear adivinanzas.</em></p>
+
+  <h3>3.2 Prompt largo</h3>
+  <p>
+    <em>A partir de este momento actúas como una IA experta en adivinanzas, capaz tanto de crear acertijos originales como de resolver los que el usuario te presente. Tu comportamiento debe seguir estas reglas: <br>
+Hablas como un maestro de acertijos: ingenioso, claro, creativo y ligeramente misterioso. Puedes usar metáforas, referencias poéticas, juegos de palabras y descripciones sensoriales. Mantienes un tono amistoso, curioso y retador.<br> 
+Cuando crees adivinanzas: <br>
+1. Ofrece acertijos originales de distintos niveles: fácil, medio, difícil, lógico y narrativo. <br> 2. Estructura recomendada:<br> 
+• Adivinanza de 3 a 8 líneas. <br>
+• Termina siempre con: "¿Qué crees que es?". <br>
+3. No des la respuesta hasta que el usuario responda o la pida directamente. <br>4. Si el usuario falla, da pistas progresivas sin revelar la solución antes de tiempo. 
+Cuando resuelvas adivinanzas dadas por el usuario: <br>
+1. Analiza la adivinanza paso a paso. <br>
+2. Identifica pistas directas, metáforas, intenciones y giros lingüísticos. <br>3. Propón una respuesta principal y, si es relevante, menciona alternativas, eligiendo la más probable. <br>
+4. Explica brevemente tu razonamiento. <br>
+5. Si la adivinanza es ambigua, pide aclaraciones. <br>
+Flujo de interacción: <br>
+• Si el usuario pide una adivinanza, créala. <br>
+• Si el usuario envía una adivinanza, resuélvela. <br>
+• Si el usuario pide dificultad, temática o estilo, adáptate. <br>
+• Si el usuario quiere un duelo de acertijos, participa.<br> 
+Regla final: la experiencia debe sentirse como hablar con un sabio experto en enigmas. 
+
+  </em></p>
+
+  <!-- 4. Metodología -->
+  <h2>4. Metodología</h2>
+  <ul>
+    <li>3 modelos × 2 tipos de prompt × 4 tareas (3 adivinanzas + creación) en cada sistema (Windows y Mac mini).</li>
+    <li>Métricas: tokens por segundo (toks/tks), tiempo al primer token (TTFT/PTK), tokens totales generados y aciertos (bien, mal, regular), más valoración de estilo.</li>
+  </ul>
+
+  <h3>4.1 Adivinanzas utilizadas</h3>
+  <ul>
+    <li><strong>Adivinanza 1 – “Mapa”</strong>: Tengo ciudades, pero no casas; montañas, pero no árboles; agua, pero no peces. Respuesta: un mapa.</li>
+    <li><strong>Adivinanza 2 – “Agujero”</strong>: ¿Qué es lo que cuanto más le quitas, más grande se vuelve? Respuesta: un agujero.</li>
+    <li><strong>Adivinanza 3 – “Tiempo”</strong>: ¿Qué cosa es que cuando pasa el hierro oxida, la carne pudre y el acero rompe? Respuesta: el tiempo.</li>
+  </ul>
+
+  <!-- 5. Resultados Windows -->
+  <h2>5. Resultados Windows <span class="tag est1">Windows</span></h2>
+
+  <div class="panel">
+    <h3>5.1 Datos completos por modelo (Windows)</h3>
+    <p>Tablas de resultados originales en Windows para cada modelo, con prompts corto y largo, sobre las tres adivinanzas y la creación.</p>
+
+    <h4>Qwen3-VL-4B (Windows)</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Prompt</th>
+          <th>Tarea</th>
+          <th>toks</th>
+          <th>Tokens</th>
+          <th>TTFT (s)</th>
+          <th>Acierta</th>
+          <th>Estilo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Corto</td><td>Ad. 1 Mapa</td><td>100,62</td><td>50</td><td>0,09</td><td>bien</td><td>Neutro/directo</td></tr>
+        <tr><td>Corto</td><td>Ad. 2 Agujero</td><td>113,67</td><td>45</td><td>0,09</td><td>bien</td><td>Neutro/directo</td></tr>
+        <tr><td>Corto</td><td>Ad. 3 Tiempo</td><td>98,11</td><td>41</td><td>0,14</td><td>bien</td><td>Neutro/directo</td></tr>
+        <tr><td>Corto</td><td>Crear Adivinanza</td><td>99,29</td><td>59</td><td>0,11</td><td>-</td><td>Breve/poético</td></tr>
+
+        <tr><td>Largo</td><td>Ad. 1 Mapa</td><td>107,22</td><td>56</td><td>0,17</td><td>bien</td><td>Explicativo</td></tr>
+        <tr><td>Largo</td><td>Ad. 2 Agujero</td><td>107,10</td><td>56</td><td>0,12</td><td>bien</td><td>Explicativo</td></tr>
+        <tr><td>Largo</td><td>Ad. 3 Tiempo</td><td>93,74</td><td>43</td><td>0,11</td><td>bien</td><td>Explicativo</td></tr>
+        <tr><td>Largo</td><td>Crear Adivinanza</td><td>98,71</td><td>78</td><td>0,10</td><td>-</td><td>Poético/narrativo</td></tr>
+      </tbody>
+    </table>
+
+    <h4>IBM Granite-4-H-Tiny (Windows)</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Prompt</th>
+          <th>Tarea</th>
+          <th>toks</th>
+          <th>Tokens</th>
+          <th>TTFT (s)</th>
+          <th>Acierta</th>
+          <th>Estilo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Corto</td><td>Ad. 1 Mapa</td><td>68,70</td><td>40</td><td>0,24</td><td>mal</td><td>Breve</td></tr>
+        <tr><td>Corto</td><td>Ad. 2 Agujero</td><td>70,02</td><td>62</td><td>0,23</td><td>mal</td><td>Breve</td></tr>
+        <tr><td>Corto</td><td>Ad. 3 Tiempo</td><td>69,81</td><td>45</td><td>0,17</td><td>bien</td><td>Breve</td></tr>
+        <tr><td>Corto</td><td>Crear Adivinanza</td><td>69,53</td><td>46</td><td>0,10</td><td>-</td><td>Poético/corto</td></tr>
+
+        <tr><td>Largo</td><td>Ad. 1 Mapa</td><td>70,13</td><td>98</td><td>0,22</td><td>bien</td><td>Muy poético</td></tr>
+        <tr><td>Largo</td><td>Ad. 2 Agujero</td><td>68,31</td><td>156</td><td>0,09</td><td>mal</td><td>Muy poético</td></tr>
+        <tr><td>Largo</td><td>Ad. 3 Tiempo</td><td>69,84</td><td>142</td><td>0,21</td><td>bien</td><td>Muy poético</td></tr>
+        <tr><td>Largo</td><td>Crear Adivinanza</td><td>66,43</td><td>169</td><td>0,08</td><td>-</td><td>Narrativo/largo</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Mistral 3B (Windows)</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Prompt</th>
+          <th>Tarea</th>
+          <th>toks</th>
+          <th>Tokens</th>
+          <th>TTFT (s)</th>
+          <th>Acierta</th>
+          <th>Estilo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Corto</td><td>Ad. 1 Mapa</td><td>133,94</td><td>39</td><td>0,04</td><td>bien</td><td>Breve/claro</td></tr>
+        <tr><td>Corto</td><td>Ad. 2 Agujero</td><td>117,66</td><td>60</td><td>0,02</td><td>regular</td><td>Breve/claro</td></tr>
+        <tr><td>Corto</td><td>Ad. 3 Tiempo</td><td>127,34</td><td>25</td><td>0,07</td><td>mal</td><td>Breve/claro</td></tr>
+        <tr><td>Corto</td><td>Crear Adivinanza</td><td>110,13</td><td>55</td><td>0,08</td><td>-</td><td>Poético/corto</td></tr>
+
+        <tr><td>Largo</td><td>Ad. 1 Mapa</td><td>125,52</td><td>94</td><td>0,03</td><td>bien</td><td>Explicativo</td></tr>
+        <tr><td>Largo</td><td>Ad. 2 Agujero</td><td>120,23</td><td>123</td><td>0,02</td><td>bien</td><td>Explicativo</td></tr>
+        <tr><td>Largo</td><td>Ad. 3 Tiempo</td><td>133,55</td><td>94</td><td>0,02</td><td>mal</td><td>Explicativo</td></tr>
+        <tr><td>Largo</td><td>Crear Adivinanza</td><td>118,03</td><td>108</td><td>0,08</td><td>-</td><td>Poético/narrativo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section id="graficas-comparativas-orig">
+    <div class="panel">
+      <h3>Análisis cuantitativo Windows</h3>
+      <p>Comparación de tokens por segundo, tiempo al primer token y tokens medios generados para Qwen3-VL-4B, Granite-4-H-Tiny y Mistral 3B en Windows.</p>
+      <div class="filtros">
+        Métrica:
+        <select id="selectMetricaInicial">
+          <option value="toks">Tokens por segundo (velocidad)</option>
+          <option value="ttft">Tiempo al primer token (segundos)</option>
+          <option value="tokens">Tokens totales (media)</option>
+        </select>
+      </div>
+      <canvas id="chartCuantitativoInicial"></canvas>
+    </div>
+
+<!-- Análisis comparativo prompt corto vs largo en Windows -->
+<section id="win-prompt-comparativa">
+  <h3>Comparativa prompt corto vs largo (Windows)</h3>
+  <p>
+    Esta gráfica resume, para cada modelo en Windows, cómo cambian los tokens generados y la velocidad media
+    (tokens/segundo) al usar prompt corto frente a prompt largo, tomando los valores medios de las cuatro tareas.
+  </p>
+
+  <canvas id="winPromptChart"></canvas>
+</section>
+
+<script>
+  // Datos medios aproximados por modelo y tipo de prompt en Windows (ejemplo resumido)
+  const winPromptLabels = ["Qwen3-VL-4B Corto", "Qwen3-VL-4B Largo", "Granite-4-H-Tiny Corto", "Granite-4-H-Tiny Largo", "Mistral 3B Corto", "Mistral 3B Largo"];
+
+  // Media de tokens generados (aprox, a partir de las tablas de Windows)
+  const winPromptTokens = [
+    (50 + 45 + 41 + 59) / 4,    // Qwen corto
+    (56 + 56 + 43 + 78) / 4,    // Qwen largo
+    (40 + 62 + 45 + 46) / 4,    // Granite corto
+    (98 + 156 + 142 + 169) / 4, // Granite largo
+    (39 + 60 + 25 + 55) / 4,    // Mistral corto
+    (94 + 123 + 94 + 108) / 4   // Mistral largo
+  ];
+
+  // Media de velocidad tokens/seg según la columna 'toks' (interpretada como toks/s en tus tablas)
+  const winPromptSpeed = [
+    (100.62 + 113.67 + 98.11 + 99.29) / 4,   // Qwen corto
+    (107.22 + 107.10 + 93.74 + 98.71) / 4,   // Qwen largo
+    (68.70 + 70.02 + 69.81 + 69.53) / 4,     // Granite corto
+    (70.13 + 68.31 + 69.84 + 66.43) / 4,     // Granite largo
+    (133.94 + 117.66 + 127.34 + 110.13) / 4, // Mistral corto
+    (125.52 + 120.23 + 133.55 + 118.03) / 4  // Mistral largo
+  ];
+
+  const ctxWinPrompt = document.getElementById("winPromptChart").getContext("2d");
+
+  new Chart(ctxWinPrompt, {
+    type: "bar",
+    data: {
+      labels: winPromptLabels,
+      datasets: [
+        {
+          label: "Tokens medios generados",
+          data: winPromptTokens,
+          backgroundColor: "rgba(54, 162, 235, 0.6)"
+        },
+        {
+          label: "Velocidad media (toks/s)",
+          data: winPromptSpeed,
+          backgroundColor: "rgba(255, 159, 64, 0.6)"
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          ticks: { autoSkip: false }
+        },
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: "Valor medio" }
+        }
+      },
+      plugins: {
+        legend: { position: "bottom" },
+        title: {
+          display: true,
+          text: "Windows: prompt corto vs largo por modelo"
+        }
+      }
+    }
+  });
+</script>
+
+
+
+    <div class="panel">
+      <h3>Análisis cualitativo Windows</h3>
+      <p>Número y porcentaje de adivinanzas resueltas correctamente por cada modelo en Windows.</p>
+      <div class="filtros">
+        Vista:
+        <select id="selectVistaCualitativaInicial">
+          <option value="aciertos">Número de aciertos</option>
+          <option value="porcentaje">Porcentaje de aciertos</option>
+        </select>
+      </div>
+      <canvas id="chartCualitativoInicial"></canvas>
+    </div>
+  </section>
+
+  <!-- 6. Resultados Mac mini -->
+  <h2>6. Resultados Mac mini <span class="tag est2">Mac mini</span></h2>
+
+  <div class="panel">
+    <h3>6.1 Datos completos por modelo (Mac mini)</h3>
+    <p>Resultados en Mac mini con las mismas tareas y prompts, registrando PTK, velocidad, tokens y aciertos.</p>
+
+    <h4>Granite (Mac mini)</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Prompt</th>
+          <th>Tarea</th>
+          <th>PTK (s)</th>
+          <th>tks</th>
+          <th>Tokens</th>
+          <th>Acierta</th>
+          <th>Observaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Corto</td><td>Mapa</td><td>0,37</td><td>59,1</td><td>54</td><td>Mal</td><td>Respuesta incorrecta</td></tr>
+        <tr><td>Corto</td><td>Agujero</td><td>0,17</td><td>45,8</td><td>217</td><td>Mal</td><td>No identifica agujero</td></tr>
+        <tr><td>Corto</td><td>Tiempo</td><td>0,18</td><td>45,7</td><td>327</td><td>Bien</td><td>Respondió correctamente</td></tr>
+        <tr><td>Corto</td><td>Crear Adivinanza</td><td>0,16</td><td>44,6</td><td>549</td><td>-</td><td>Adivinanza generada</td></tr>
+
+        <tr><td>Largo</td><td>Mapa</td><td>0,22</td><td>43,5</td><td>9182</td><td>Bien</td><td>Respuesta correcta con detalle</td></tr>
+        <tr><td>Largo</td><td>Agujero</td><td>0,17</td><td>45,8</td><td>217</td><td>Mal</td><td>Falla nuevamente</td></tr>
+        <tr><td>Largo</td><td>Tiempo</td><td>0,20</td><td>43,8</td><td>8176</td><td>Bien</td><td>Respuesta correcta</td></tr>
+        <tr><td>Largo</td><td>Crear Adivinanza</td><td>3,31</td><td>43,8</td><td>6199</td><td>-</td><td>Adivinanza detallada</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Mistral 3B (Mac mini)</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Prompt</th>
+          <th>Tarea</th>
+          <th>PTK (s)</th>
+          <th>tks</th>
+          <th>Tokens</th>
+          <th>Acierta</th>
+          <th>Observaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Corto</td><td>Mapa</td><td>0,12</td><td>39,7</td><td>731</td><td>Bien</td><td>Identifica mapa</td></tr>
+        <tr><td>Corto</td><td>Agujero</td><td>0,18</td><td>39,6</td><td>247</td><td>Mal</td><td>Respuesta incorrecta</td></tr>
+        <tr><td>Corto</td><td>Tiempo</td><td>0,12</td><td>40,0</td><td>5282</td><td>Regular</td><td>Responde oxígeno</td></tr>
+        <tr><td>Corto</td><td>Crear Adivinanza</td><td>0,12</td><td>37,4</td><td>781</td><td>-</td><td>Adivinanza creada</td></tr>
+
+        <tr><td>Largo</td><td>Mapa</td><td>0,17</td><td>41,0</td><td>1060</td><td>Bien</td><td>Responde correctamente</td></tr>
+        <tr><td>Largo</td><td>Agujero</td><td>0,12</td><td>40,2</td><td>1054</td><td>Mal</td><td>No acierta</td></tr>
+        <tr><td>Largo</td><td>Tiempo</td><td>0,12</td><td>42,1</td><td>1079</td><td>Mal</td><td>Respuesta incorrecta</td></tr>
+        <tr><td>Largo</td><td>Crear Adivinanza</td><td>0,12</td><td>42,0</td><td>949</td><td>-</td><td>Adivinanza larga</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Qwen (Mac mini)</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Prompt</th>
+          <th>Tarea</th>
+          <th>PTK (s)</th>
+          <th>tks</th>
+          <th>Tokens</th>
+          <th>Acierta</th>
+          <th>Observaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Corto</td><td>Mapa</td><td>0,36</td><td>40,1</td><td>2272</td><td>Bien</td><td>Responde correctamente</td></tr>
+        <tr><td>Corto</td><td>Agujero</td><td>4,09</td><td>38,4</td><td>7384</td><td>Bien</td><td>Identifica agujero</td></tr>
+        <tr><td>Corto</td><td>Tiempo</td><td>4,09</td><td>38,4</td><td>7384</td><td>Bien</td><td>Responde tiempo</td></tr>
+        <tr><td>Corto</td><td>Crear Adivinanza</td><td>7,47</td><td>32,4</td><td>21424</td><td>-</td><td>Adivinanza creativa</td></tr>
+
+        <tr><td>Largo</td><td>Mapa</td><td>0,36</td><td>40,1</td><td>2272</td><td>Bien</td><td>Responde correctamente</td></tr>
+        <tr><td>Largo</td><td>Agujero</td><td>2,23</td><td>37,2</td><td>21054</td><td>Bien</td><td>Responde agujero</td></tr>
+        <tr><td>Largo</td><td>Tiempo</td><td>4,09</td><td>38,4</td><td>7384</td><td>Bien</td><td>Responde tiempo</td></tr>
+        <tr><td>Largo</td><td>Crear Adivinanza</td><td>7,47</td><td>32,4</td><td>21424</td><td>-</td><td>Adivinanza larga</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section id="graficas-interactivas-nuevos-datos">
+    <div class="panel">
+      <h3>Análisis cuantitativo global Mac mini</h3>
+      <p>Comparación global de PTK, velocidad, tokens y porcentaje de acierto por modelo usando los datos agregados de Mac mini.</p>
+      <div class="filtros">
+        Métrica:
+        <select id="selectMetrica">
+          <option value="ptk">PTK (s) - Latencia inicial</option>
+          <option value="tks">Velocidad (tks)</option>
+          <option value="tokens">Tokens totales (media)</option>
+          <option value="aciertos">Acierto (%)</option>
+        </select>
+      </div>
+      <canvas id="chartCuantitativo"></canvas>
+    </div>
+
+    <div class="panel">
+      <h3>Prompt corto vs largo Mac mini</h3>
+      <p>Comparación de rendimiento por modelo al usar prompt corto y largo en Mac mini.</p>
+      <div class="filtros">
+        Métrica:
+        <select id="selectMetricaPrompt">
+          <option value="ptk">PTK (s)</option>
+          <option value="tks">Velocidad (tks)</option>
+          <option value="tokens">Tokens generados</option>
+          <option value="acierto">Acierto (%)</option>
+        </select>
+      </div>
+      <canvas id="chartPrompt"></canvas>
+    </div>
+
+    <div class="panel">
+      <h3>Análisis cualitativo Mac mini</h3>
+      <p>Aciertos totales sobre 6 adivinanzas por modelo en Mac mini y su porcentaje de precisión.</p>
+      <div class="filtros">
+        Vista:
+        <select id="selectVistaCualitativa">
+          <option value="aciertos">Número de aciertos</option>
+          <option value="porcentaje">Porcentaje de aciertos</option>
+        </select>
+      </div>
+      <canvas id="chartCualitativo"></canvas>
+    </div>
+  </section>
+
+  <!-- 7. Comparativa Windows vs Mac mini -->
+  <h2>7. Comparativa Windows vs Mac mini</h2>
+  <div class="panel">
+    <h3>Gráfica comparativa global Windows vs Mac mini</h3>
+    <p>
+      Gráfica interactiva que compara, para cada modelo, velocidad (tokens/segundo), porcentaje de acierto, tokens generados y PTK/TTFT medio entre Windows y Mac mini.
+    </p>
+    <div class="filtros">
+      Métrica:
+      <select id="selectMetricaComparativa">
+        <option value="toks">Velocidad (tokens/segundo)</option>
+        <option value="aciertos">Porcentaje de acierto</option>
+        <option value="tokens">Tokens generados (media)</option>
+        <option value="ptk">PTK/TTFT medio (s)</option>
+      </select>
+    </div>
+    <canvas id="chartComparativaEstudios"></canvas>
+  </div>
+
+  <!-- 8. Conclusiones -->
+  <h2>8. Conclusiones</h2>
+  <div class="panel">
+    <h3>Conclusiones principales</h3>
+    <ul>
+      <li>Qwen destaca por su alta precisión en ambos sistemas, resolviendo correctamente las adivinanzas incluso cuando aumenta la longitud de las respuestas.</li>
+      <li>Granite ofrece un buen equilibrio entre velocidad y calidad con prompt largo, pero muestra debilidad persistente en la adivinanza del “agujero”.</li>
+      <li>Mistral resalta por su baja latencia y buena fluidez, aunque sacrifica precisión, especialmente en la adivinanza del “tiempo”.</li>
+    </ul>
+
+    <h3>Impacto del entorno (Windows vs Mac mini)</h3>
+    <ul>
+      <li>En Mac mini las latencias PTK de Granite y Mistral se mantienen bajas, pero Qwen incrementa notablemente la latencia a cambio de respuestas mucho más largas.</li>
+      <li>El porcentaje de acierto se mantiene estable entre sistemas: Qwen conserva el 100 %, Granite ronda la mitad de aciertos y Mistral baja alrededor de un tercio.</li>
+    </ul>
+
+    <h3>Influencia del tipo de prompt</h3>
+    <ul>
+      <li>El prompt largo tiende a aumentar tokens generados y detalle explicativo, mejorando el estilo narrativo en los tres modelos.</li>
+      <li>Los prompts cortos favorecen rapidez y respuestas breves, pero pueden reducir el grado de explicación y, en algunos casos, la precisión.</li>
+    </ul>
+
+    <h3>Recomendaciones finales</h3>
+    <ul>
+      <li>Para máxima precisión y riqueza de contenido, Qwen es la mejor opción, asumiendo que se acepta mayor latencia y más tokens.</li>
+      <li>Para escenarios sensibles a la latencia, Mistral puede ser preferible, siempre que se supervise la corrección de las respuestas.</li>
+      <li>Granite es adecuado cuando se busca un estilo poético y un compromiso entre velocidad y calidad, especialmente con prompt largo.</li>
+    </ul>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    // -----------------------------
+    // Datos Windows (resumen para gráficas)
+    // -----------------------------
+    const datosCuantitativosInicial = [
+      { modelo: "Qwen3-VL-4B", toks: 103.34, ttft: 0.11, tokens: 56.3 },
+      { modelo: "Granite-4-H-Tiny", toks: 69.14, ttft: 0.16, tokens: 89.5 },
+      { modelo: "Mistral 3B", toks: 122.32, ttft: 0.04, tokens: 73.5 }
+    ];
+
+    const datosCualitativosInicial = [
+      { modelo: "Qwen3-VL-4B", aciertos: 6, total: 6, calidad: "Muy alta (100%)" },
+      { modelo: "Granite-4-H-Tiny", aciertos: 4, total: 6, calidad: "Media (67%)" },
+      { modelo: "Mistral 3B", aciertos: 4, total: 6, calidad: "Media (67%)" }
+    ];
+
+    // -----------------------------
+    // Datos Mac mini (agregados)
+    // -----------------------------
+    const resumenModelos = [
+      { modelo: "Granite", ptk: 0.20, tks: 46.47, tokens: 3375, aciertos: 3, total: 6 },
+      { modelo: "Mistral", ptk: 0.17, tks: 40.15, tokens: 2367, aciertos: 2, total: 6 },
+      { modelo: "Qwen",   ptk: 3.80, tks: 37.10, tokens: 10532, aciertos: 6, total: 6 }
+    ];
+
+    const datosPrompt = [
+      { modelo: "Granite", tipo: "Corto", ptk: 0.22, tks: 48.80, tokens: 636,  acierto: 33 },
+      { modelo: "Granite", tipo: "Largo", ptk: 0.98, tks: 44.54, tokens: 6194, acierto: 67 },
+      { modelo: "Mistral", tipo: "Corto", ptk: 0.14, tks: 39.10, tokens: 1510, acierto: 33 },
+      { modelo: "Mistral", tipo: "Largo", ptk: 0.14, tks: 41.20, tokens: 3223, acierto: 33 },
+      { modelo: "Qwen",    tipo: "Corto", ptk: 3.98, tks: 37.28, tokens: 7110, acierto: 100 },
+      { modelo: "Qwen",    tipo: "Largo", ptk: 3.80, tks: 37.00, tokens: 10535, acierto: 100 }
+    ];
+
+    const datosCualitativos = [
+      { modelo: "Granite", aciertos: 3, total: 6, calidad: "Media (50%)" },
+      { modelo: "Mistral", aciertos: 2, total: 6, calidad: "Baja (33%)" },
+      { modelo: "Qwen",    aciertos: 6, total: 6, calidad: "Muy alta (100%)" }
+    ];
+
+    // -----------------------------
+    // Gráfica Windows: cuantitativo
+    // -----------------------------
+    const ctxCuantInicial = document.getElementById("chartCuantitativoInicial").getContext("2d");
+
+    function getDatosCuantInicial(metrica) {
+      if (metrica === "toks") {
+        return {
+          etiqueta: "Tokens por segundo",
+          datos: datosCuantitativosInicial.map(d => d.toks)
+        };
+      } else if (metrica === "ttft") {
+        return {
+          etiqueta: "Tiempo al primer token (s)",
+          datos: datosCuantitativosInicial.map(d => d.ttft)
+        };
+      } else {
+        return {
+          etiqueta: "Tokens totales (media)",
+          datos: datosCuantitativosInicial.map(d => d.tokens)
+        };
+      }
+    }
+
+    let cfgCuantInicial = getDatosCuantInicial("toks");
+
+    let chartCuantInicial = new Chart(ctxCuantInicial, {
+      type: "bar",
+      data: {
+        labels: datosCuantitativosInicial.map(d => d.modelo),
+        datasets: [{
+          label: cfgCuantInicial.etiqueta,
+          data: cfgCuantInicial.datos,
+          backgroundColor: [
+            "rgba(165,180,252,0.85)",
+            "rgba(96,165,250,0.85)",
+            "rgba(190,242,100,0.85)"
+          ],
+          borderColor: [
+            "rgba(129,140,248,1)",
+            "rgba(59,130,246,1)",
+            "rgba(132,204,22,1)"
+          ],
+          borderWidth: 1,
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: "#374151" } }
+        },
+        scales: {
+          x: {
+            ticks: { color: "#4b5563" },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: "#4b5563" },
+            grid: { color: "rgba(209,213,219,0.7)" }
+          }
+        }
+      }
+    });
+
+    document.getElementById("selectMetricaInicial").addEventListener("change", e => {
+      const metrica = e.target.value;
+      const nuevo = getDatosCuantInicial(metrica);
+      chartCuantInicial.data.datasets[0].label = nuevo.etiqueta;
+      chartCuantInicial.data.datasets[0].data = nuevo.datos;
+      chartCuantInicial.update();
+    });
+
+    // -----------------------------
+    // Gráfica Windows: cualitativo
+    // -----------------------------
+    const ctxCualInicial = document.getElementById("chartCualitativoInicial").getContext("2d");
+
+    function getDatosCualInicial(vista) {
+      if (vista === "aciertos") {
+        return {
+          etiqueta: "Número de adivinanzas resueltas correctamente (de 6)",
+          datos: datosCualitativosInicial.map(d => d.aciertos)
+        };
+      } else {
+        return {
+          etiqueta: "Porcentaje de aciertos",
+          datos: datosCualitativosInicial.map(d => (d.aciertos / d.total) * 100)
+        };
+      }
+    }
+
+    let cfgCualInicial = getDatosCualInicial("aciertos");
+
+    let chartCualInicial = new Chart(ctxCualInicial, {
+      type: "bar",
+      data: {
+        labels: datosCualitativosInicial.map(d => d.modelo),
+        datasets: [{
+          label: cfgCualInicial.etiqueta,
+          data: cfgCualInicial.datos,
+          backgroundColor: [
+            "rgba(244,114,182,0.85)",
+            "rgba(252,211,77,0.85)",
+            "rgba(129,230,217,0.85)"
+          ],
+          borderColor: [
+            "rgba(236,72,153,1)",
+            "rgba(217,119,6,1)",
+            "rgba(14,159,110,1)"
+          ],
+          borderWidth: 1,
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: "#374151" } },
+          tooltip: {
+            callbacks: {
+              afterBody: context => {
+                const i = context[0].dataIndex;
+                return "Calidad global: " + datosCualitativosInicial[i].calidad;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: "#4b5563" },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: "#4b5563" },
+            grid: { color: "rgba(209,213,219,0.7)" }
+          }
+        }
+      }
+    });
+
+    document.getElementById("selectVistaCualitativaInicial").addEventListener("change", e => {
+      const vista = e.target.value;
+      const nuevo = getDatosCualInicial(vista);
+      chartCualInicial.data.datasets[0].label = nuevo.etiqueta;
+      chartCualInicial.data.datasets[0].data = nuevo.datos;
+      chartCualInicial.update();
+    });
+
+    // -----------------------------
+    // Gráfica Mac mini: cuantitativo global
+    // -----------------------------
+    const ctxCuant = document.getElementById("chartCuantitativo").getContext("2d");
+
+    function getDatosCuant(metrica) {
+      if (metrica === "ptk") {
+        return {
+          etiqueta: "PTK promedio (s)",
+          datos: resumenModelos.map(d => d.ptk)
+        };
+      } else if (metrica === "tks") {
+        return {
+          etiqueta: "Velocidad (tks)",
+          datos: resumenModelos.map(d => d.tks)
+        };
+      } else if (metrica === "tokens") {
+        return {
+          etiqueta: "Tokens totales (media)",
+          datos: resumenModelos.map(d => d.tokens)
+        };
+      } else {
+        return {
+          etiqueta: "Porcentaje de aciertos",
+          datos: resumenModelos.map(d => (d.aciertos / d.total) * 100)
+        };
+      }
+    }
+
+    let configCuant = getDatosCuant("ptk");
+
+    let chartCuant = new Chart(ctxCuant, {
+      type: "bar",
+      data: {
+        labels: resumenModelos.map(d => d.modelo),
+        datasets: [{
+          label: configCuant.etiqueta,
+          data: configCuant.datos,
+          backgroundColor: [
+            "rgba(167,243,208,0.85)",
+            "rgba(196,181,253,0.85)",
+            "rgba(252,165,165,0.85)"
+          ],
+          borderColor: [
+            "rgba(16,185,129,1)",
+            "rgba(139,92,246,1)",
+            "rgba(239,68,68,1)"
+          ],
+          borderWidth: 1,
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: "#374151" } }
+        },
+        scales: {
+          x: {
+            ticks: { color: "#4b5563" },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: "#4b5563" },
+            grid: { color: "rgba(209,213,219,0.7)" }
+          }
+        }
+      }
+    });
+
+    document.getElementById("selectMetrica").addEventListener("change", e => {
+      const metrica = e.target.value;
+      const nuevo = getDatosCuant(metrica);
+      chartCuant.data.datasets[0].label = nuevo.etiqueta;
+      chartCuant.data.datasets[0].data = nuevo.datos;
+      chartCuant.update();
+    });
+
+    // -----------------------------
+    // Gráfica Mac mini: corto vs largo
+    // -----------------------------
+    const ctxPrompt = document.getElementById("chartPrompt").getContext("2d");
+
+    function getDatosPrompt(metrica) {
+      const modelos = ["Granite", "Mistral", "Qwen"];
+
+      const corto = modelos.map(m => {
+        const fila = datosPrompt.find(d => d.modelo === m && d.tipo === "Corto");
+        if (metrica === "ptk") return fila.ptk;
+        if (metrica === "tks") return fila.tks;
+        if (metrica === "tokens") return fila.tokens;
+        return fila.acierto;
+      });
+
+      const largo = modelos.map(m => {
+        const fila = datosPrompt.find(d => d.modelo === m && d.tipo === "Largo");
+        if (metrica === "ptk") return fila.ptk;
+        if (metrica === "tks") return fila.tks;
+        if (metrica === "tokens") return fila.tokens;
+        return fila.acierto;
+      });
+
+      let etiqueta;
+      if (metrica === "ptk") etiqueta = "PTK (s)";
+      else if (metrica === "tks") etiqueta = "Velocidad (tks)";
+      else if (metrica === "tokens") etiqueta = "Tokens generados";
+      else etiqueta = "Porcentaje de acierto";
+
+      return { modelos, corto, largo, etiqueta };
+    }
+
+    let cfgPrompt = getDatosPrompt("ptk");
+
+    let chartPrompt = new Chart(ctxPrompt, {
+      type: "bar",
+      data: {
+        labels: cfgPrompt.modelos,
+        datasets: [
+          {
+            label: "Prompt corto",
+            data: cfgPrompt.corto,
+            backgroundColor: "rgba(191,219,254,0.85)",
+            borderColor: "rgba(59,130,246,1)",
+            borderWidth: 1,
+            borderRadius: 6
+          },
+          {
+            label: "Prompt largo",
+            data: cfgPrompt.largo,
+            backgroundColor: "rgba(252,207,232,0.85)",
+            borderColor: "rgba(219,39,119,1)",
+            borderWidth: 1,
+            borderRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: "#374151" } }
+        },
+        scales: {
+          x: {
+            ticks: { color: "#4b5563" },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: "#4b5563" },
+            grid: { color: "rgba(209,213,219,0.7)" }
+          }
+        }
+      }
+    });
+
+    document.getElementById("selectMetricaPrompt").addEventListener("change", e => {
+      const metrica = e.target.value;
+      const nuevo = getDatosPrompt(metrica);
+      chartPrompt.data.datasets[0].data = nuevo.corto;
+      chartPrompt.data.datasets[1].data = nuevo.largo;
+      chartPrompt.update();
+    });
+
+    // -----------------------------
+    // Gráfica Mac mini: cualitativa
+    // -----------------------------
+    const ctxCual = document.getElementById("chartCualitativo").getContext("2d");
+
+    function getDatosCual(vista) {
+      if (vista === "aciertos") {
+        return {
+          etiqueta: "Número de adivinanzas resueltas correctamente (de 6)",
+          datos: datosCualitativos.map(d => d.aciertos)
+        };
+      } else {
+        return {
+          etiqueta: "Porcentaje de aciertos",
+          datos: datosCualitativos.map(d => (d.aciertos / d.total) * 100)
+        };
+      }
+    }
+
+    let configCual = getDatosCual("aciertos");
+
+    let chartCual = new Chart(ctxCual, {
+      type: "bar",
+      data: {
+        labels: datosCualitativos.map(d => d.modelo),
+        datasets: [{
+          label: configCual.etiqueta,
+          data: configCual.datos,
+          backgroundColor: [
+            "rgba(254,202,202,0.85)",
+            "rgba(254,249,195,0.85)",
+            "rgba(204,251,241,0.85)"
+          ],
+          borderColor: [
+            "rgba(248,113,113,1)",
+            "rgba(234,179,8,1)",
+            "rgba(20,184,166,1)"
+          ],
+          borderWidth: 1,
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: "#374151" } },
+          tooltip: {
+            callbacks: {
+              afterBody: context => {
+                const i = context[0].dataIndex;
+                const cal = datosCualitativos[i].calidad;
+                return "Calidad global: " + cal;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: "#4b5563" },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: "#4b5563" },
+            grid: { color: "rgba(209,213,219,0.7)" }
+          }
+        }
+      }
+    });
+
+    document.getElementById("selectVistaCualitativa").addEventListener("change", e => {
+      const vista = e.target.value;
+      const nuevo = getDatosCual(vista);
+      chartCual.data.datasets[0].label = nuevo.etiqueta;
+      chartCual.data.datasets[0].data = nuevo.datos;
+      chartCual.update();
+    });
+
+    // -----------------------------
+    // Nueva gráfica comparativa Windows vs Mac mini
+    // -----------------------------
+    const ctxComparativa = document.getElementById("chartComparativaEstudios").getContext("2d");
+
+    // Para la comparativa:
+    // - Windows: tok/s, TTFT, tokens medios y % aciertos de datosCuantitativosInicial + datosCualitativosInicial.
+    // - Mac mini: tks, PTK, tokens y % aciertos de resumenModelos.
+    const modelosComparativa = ["Granite", "Mistral", "Qwen"];
+
+    const velocidadWindows = [
+      datosCuantitativosInicial.find(d => d.modelo.includes("Granite")).toks,
+      datosCuantitativosInicial.find(d => d.modelo.includes("Mistral")).toks,
+      datosCuantitativosInicial.find(d => d.modelo.includes("Qwen")).toks
+    ];
+
+    const velocidadMac = [
+      resumenModelos.find(d => d.modelo === "Granite").tks,
+      resumenModelos.find(d => d.modelo === "Mistral").tks,
+      resumenModelos.find(d => d.modelo === "Qwen").tks
+    ];
+
+    const tokensWindows = [
+      datosCuantitativosInicial.find(d => d.modelo.includes("Granite")).tokens,
+      datosCuantitativosInicial.find(d => d.modelo.includes("Mistral")).tokens,
+      datosCuantitativosInicial.find(d => d.modelo.includes("Qwen")).tokens
+    ];
+
+    const tokensMac = [
+      resumenModelos.find(d => d.modelo === "Granite").tokens,
+      resumenModelos.find(d => d.modelo === "Mistral").tokens,
+      resumenModelos.find(d => d.modelo === "Qwen").tokens
+    ];
+
+    const ptkWindows = [
+      datosCuantitativosInicial.find(d => d.modelo.includes("Granite")).ttft,
+      datosCuantitativosInicial.find(d => d.modelo.includes("Mistral")).ttft,
+      datosCuantitativosInicial.find(d => d.modelo.includes("Qwen")).ttft
+    ];
+
+    const ptkMac = [
+      resumenModelos.find(d => d.modelo === "Granite").ptk,
+      resumenModelos.find(d => d.modelo === "Mistral").ptk,
+      resumenModelos.find(d => d.modelo === "Qwen").ptk
+    ];
+
+    const aciertoWindows = [
+      (datosCualitativosInicial.find(d => d.modelo.includes("Granite")).aciertos /
+       datosCualitativosInicial.find(d => d.modelo.includes("Granite")).total) * 100,
+      (datosCualitativosInicial.find(d => d.modelo.includes("Mistral")).aciertos /
+       datosCualitativosInicial.find(d => d.modelo.includes("Mistral")).total) * 100,
+      (datosCualitativosInicial.find(d => d.modelo.includes("Qwen")).aciertos /
+       datosCualitativosInicial.find(d => d.modelo.includes("Qwen")).total) * 100
+    ];
+
+    const aciertoMac = [
+      (resumenModelos.find(d => d.modelo === "Granite").aciertos /
+       resumenModelos.find(d => d.modelo === "Granite").total) * 100,
+      (resumenModelos.find(d => d.modelo === "Mistral").aciertos /
+       resumenModelos.find(d => d.modelo === "Mistral").total) * 100,
+      (resumenModelos.find(d => d.modelo === "Qwen").aciertos /
+       resumenModelos.find(d => d.modelo === "Qwen").total) * 100
+    ];
+
+    function getDatosComparativa(metrica) {
+      if (metrica === "toks") {
+        return {
+          etiqueta: "Velocidad (tokens/segundo)",
+          datosWindows: velocidadWindows,
+          datosMac: velocidadMac
+        };
+      } else if (metrica === "aciertos") {
+        return {
+          etiqueta: "Porcentaje de acierto",
+          datosWindows: aciertoWindows,
+          datosMac: aciertoMac
+        };
+      } else if (metrica === "tokens") {
+        return {
+          etiqueta: "Tokens generados (media)",
+          datosWindows: tokensWindows,
+          datosMac: tokensMac
+        };
+      } else { // ptk
+        return {
+          etiqueta: "PTK / TTFT medio (s)",
+          datosWindows: ptkWindows,
+          datosMac: ptkMac
+        };
+      }
+    }
+
+    let cfgComparativa = getDatosComparativa("toks");
+
+    let chartComparativa = new Chart(ctxComparativa, {
+      type: "bar",
+      data: {
+        labels: modelosComparativa,
+        datasets: [
+          {
+            label: "Windows",
+            data: cfgComparativa.datosWindows,
+            backgroundColor: "rgba(191,219,254,0.85)",
+            borderColor: "rgba(37,99,235,1)",
+            borderWidth: 1,
+            borderRadius: 6
+          },
+          {
+            label: "Mac mini",
+            data: cfgComparativa.datosMac,
+            backgroundColor: "rgba(204,251,241,0.85)",
+            borderColor: "rgba(5,150,105,1)",
+            borderWidth: 1,
+            borderRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: "#374151" } }
+        },
+        scales: {
+          x: {
+            ticks: { color: "#4b5563" },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: "#4b5563" },
+            grid: { color: "rgba(209,213,219,0.7)" }
+          }
+        }
+      }
+    });
+
+    document.getElementById("selectMetricaComparativa").addEventListener("change", e => {
+      const metrica = e.target.value;
+      const nuevo = getDatosComparativa(metrica);
+      chartComparativa.data.datasets[0].label = "Windows";
+      chartComparativa.data.datasets[0].data = nuevo.datosWindows;
+      chartComparativa.data.datasets[1].label = "Mac mini";
+      chartComparativa.data.datasets[1].data = nuevo.datosMac;
+      chartComparativa.update();
+    });
+  </script>
+</body>
+</html>
