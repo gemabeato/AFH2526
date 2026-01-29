@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual: Fine-Tuning Gemma 3-270M en macOS con MLX</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --secondary: #7c3aed;
+            --success: #059669;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --code-bg: #1e1e1e;
+            --code-text: #d4d4d4;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            position: relative;
+            font-weight: 300;
+        }
+        
+        header .meta {
+            margin-top: 20px;
+            font-size: 0.9em;
+            opacity: 0.8;
+            position: relative;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 40px;
+            padding: 40px;
+        }
+        
+        aside {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .toc {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #dbeafe;
+        }
+        
+        .toc h2 {
+            color: var(--primary);
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 12px;
+        }
+        
+        .toc ul {
+            list-style: none;
+        }
+        
+        .toc li {
+            margin: 10px 0;
+        }
+        
+        .toc a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .toc a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        article {
+            max-width: 900px;
+        }
+        
+        section {
+            margin-bottom: 50px;
+            scroll-margin-top: 20px;
+        }
+        
+        h2 {
+            color: var(--primary);
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        h3 {
+            color: var(--secondary);
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+        }
+        
+        h4 {
+            color: var(--text);
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .alert {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border-left: 5px solid;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            border-color: var(--primary);
+            color: #1e40af;
+        }
+        
+        .alert-success {
+            background: #d1fae5;
+            border-color: var(--success);
+            color: #065f46;
+        }
+        
+        .alert-warning {
+            background: #fef3c7;
+            border-color: var(--warning);
+            color: #92400e;
+        }
+        
+        .alert-danger {
+            background: #fee2e2;
+            border-color: var(--danger);
+            color: #991b1b;
+        }
+        
+        .alert strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid #374151;
+            position: relative;
+        }
+        
+        pre::before {
+            content: '💻 Terminal';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #374151;
+            padding: 5px 15px;
+            border-radius: 0 10px 0 10px;
+            font-size: 0.8em;
+            color: #9ca3af;
+        }
+        
+        code {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+        }
+        
+        .code-inline {
+            background: #f1f5f9;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: #dc2626;
+            font-size: 0.9em;
+        }
+        
+        ol, ul {
+            margin: 20px 0 20px 30px;
+        }
+        
+        li {
+            margin: 10px 0;
+        }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+        
+        .error-box {
+            background: #fef2f2;
+            border: 2px solid #fecaca;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .error-box h4 {
+            color: var(--danger);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .error-box h4::before {
+            content: '⚠️';
+            font-size: 1.5em;
+        }
+        
+        .solution {
+            background: #f0fdf4;
+            border-left: 4px solid var(--success);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .solution::before {
+            content: '✅ Solución: ';
+            font-weight: bold;
+            color: var(--success);
+        }
+        
+        footer {
+            background: #1e293b;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+        
+        footer p {
+            margin: 8px 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+        
+        .badge-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .badge-info {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .badge-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            aside {
+                position: static;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+            
+            aside {
+                display: none;
+            }
+            
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Manual de Fine-Tuning</h1>
+            <p class="subtitle">Gemma 3-270M con MLX en macOS. Hecho por Gema Beato </p>
+            <p class="meta">
+                <span class="badge badge-info">Python 3.11</span>
+                <span class="badge badge-info">MLX-LM</span>
+                <span class="badge badge-success">LoRA/QLoRA</span>
+                <span class="badge badge-warning">macOS</span>
+            </p>
+        </header>
+        
+        <div class="main-content">
+            <aside>
+                <nav class="toc">
+                    <h2>📋 Pasos</h2>
+                    <ul>
+                        <li><a href="#intro">Introducción</a></li>
+                        <li><a href="#paso1">1. Entorno Python</a></li>
+                        <li><a href="#paso2">2. Instalación</a></li>
+                        <li><a href="#paso3">3. Descargar Modelo</a></li>
+                        <li><a href="#paso4">4. Crear Dataset</a></li>
+                        <li><a href="#paso5">5. Fine-Tuning</a></li>
+                        <li><a href="#paso6">6. Probar Modelo</a></li>
+                        <li><a href="#paso7">7. Fusionar LoRA</a></li>
+                        <li><a href="#errores">❌ Errores encontrados</a></li>
+                    </ul>
+                </nav>
+            </aside>
+            
+            <article>
+                <section id="intro">
+                    <h2>📖 Introducción</h2>
+                    <p>
+                        Este manual documenta el proceso completo para realizar <strong>fine-tuning</strong> del modelo 
+                        <strong>Gemma 3-270M IT (4-bit MLX)</strong> en un Mac, 
+                        utilizando la técnica de <strong>LoRA</strong> (Low-Rank Adaptation) mediante la librería 
+                        <strong>MLX-LM</strong>.
+                    </p>
+                    
+                    <div class="alert alert-info">
+                        <strong>🎯 Objetivo del ejercicio</strong>
+                        Especializar el modelo para que responda con un estilo personalizado (en este caso, un asistente 
+                        de programación para estudiantes de ASIR) y que reconozca información personalizada (como el personaje 
+                        ficticio "Rafa Vadal"). El objetivo es que al preguntarle quién es Rafa Vadal, el modelo responda con
+			que es un pescador famoso.
+                    </div>
+                    
+                    <h3>¿Qué es el Fine-Tuning?</h3>
+                    <p>
+                        El fine-tuning es el proceso de tomar un modelo pre-entrenado y continuar su entrenamiento con 
+                        un dataset específico y pequeño para especializar su comportamiento en una tarea concreta, 
+                        sin necesidad de entrenar desde cero.
+                    </p>
+                    
+                    <h3>¿Qué es LoRA?</h3>
+                    <p>
+                        LoRA (Low-Rank Adaptation) es una técnica de <strong>PEFT</strong> (Parameter-Efficient Fine-Tuning) 
+                        que congela el modelo base y entrena solo un pequeño conjunto de parámetros adicionales ("adaptadores"), 
+                        lo que reduce drásticamente los requisitos de memoria y tiempo de entrenamiento.
+                    </p>
+                </section>
+                
+                
+                <section id="paso1">
+                    <h2>1️⃣ Preparar el Entorno Python</h2>
+                    
+                    <h3><span class="step-number">1.1</span> Instalar Homebrew </h3>
+                    <pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+                    
+                    <p>Añade Brew al PATH:</p>
+                    <pre><code>echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"</code></pre>
+                    
+                    <h3><span class="step-number">1.2</span> Instalar Python 3.11</h3>
+                    <pre><code>brew update
+brew install python@3.11</code></pre>
+                    
+                    <p>Verificar instalación:</p>
+                    <pre><code>python3.11 --version
+# Salida esperada: Python 3.11.x</code></pre>
+                    
+                    <h3><span class="step-number">1.3</span> Crear carpeta del proyecto</h3>
+                    <pre><code>cd ~
+mkdir -p mi-finetuning-gemma
+cd mi-finetuning-gemma</code></pre>
+                    
+                    <h3><span class="step-number">1.4</span> Crear entorno virtual</h3>
+                    <pre><code># Crear venv con Python 3.11
+/opt/homebrew/bin/python3.11 -m venv .venv
+
+# Activar el entorno
+source .venv/bin/activate
+
+# Verificar versión de Python dentro del venv
+python --version
+# Debe mostrar: Python 3.11.x</code></pre>
+                    
+                    <div class="alert alert-success">
+                        <strong>✅ Checkpoint</strong>
+                        Si ves <code>(.venv)</code> al principio del prompt y <code>python --version</code> muestra 3.11.x, 
+                        el entorno está correctamente configurado.
+                    </div>
+                </section>
+                
+                <section id="paso2">
+                    <h2>2️⃣ Instalación de Dependencias</h2>
+                    
+                    <h3><span class="step-number">2.1</span> Actualizar pip</h3>
+                    <pre><code>pip install --upgrade pip</code></pre>
+                    
+                    <h3><span class="step-number">2.2</span> Instalar MLX-LM y herramientas</h3>
+                    <pre><code>pip install "mlx-lm[train]" "huggingface_hub[cli]" datasets</code></pre>
+                    
+                    <p><strong>Descripción de paquetes:</strong></p>
+                    <ul>
+                        <li><strong>mlx-lm[train]</strong>: librería MLX para LLMs con dependencias de entrenamiento</li>
+                        <li><strong>huggingface_hub[cli]</strong>: cliente CLI para descargar modelos de Hugging Face</li>
+                        <li><strong>datasets</strong>: librería para cargar y procesar datasets</li>
+                    </ul>
+                    
+                    <h3><span class="step-number">2.3</span> Verificar instalación</h3>
+                    <pre><code>python -c "import mlx_lm; print('mlx_lm OK')"
+# Salida esperada: mlx_lm OK</code></pre>
+                    
+                    <div class="alert alert-info">
+                        <strong>💡 Nota</strong>
+                        La instalación puede tardar varios minutos. Si ves warnings sobre numpy o transformers, 
+                        no te preocupes siempre que al final se complete con éxito.
+                    </div>
+                </section>
+                
+                <section id="paso3">
+                    <h2>3️⃣ Descargar el Modelo Base</h2>
+                    
+                    <h3><span class="step-number">3.1</span> Crear carpeta de modelos</h3>
+                    <pre><code>mkdir -p models</code></pre>
+                    
+                    <h3><span class="step-number">3.2</span> Descargar Gemma 3-270M IT 4-bit MLX</h3>
+                    <pre><code>hf download mlx-community/gemma-3-270m-it-4bit \
+  --local-dir models/gemma-3-270m-it-4bit</code></pre>
+                    
+                    <p>Este comando descarga la versión cuantizada en 4-bit del modelo Gemma 3-270M optimizada para MLX.</p>
+                    
+                    <h3><span class="step-number">3.3</span> Verificar descarga</h3>
+                    <pre><code>ls models/gemma-3-270m-it-4bit/
+# Debes ver: config.json, tokenizer.json, *.safetensors, etc.</code></pre>
+                    
+                    <div class="alert alert-success">
+                        <strong>✅ Checkpoint</strong>
+                        El modelo ocupa aproximadamente 200-300 MB. Si la carpeta contiene archivos .safetensors y config.json, 
+                        la descarga fue exitosa.
+                    </div>
+                </section>
+                
+                <section id="paso4">
+                    <h2>4️⃣ Crear el Dataset de Fine-Tuning</h2>
+                    
+                    <h3><span class="step-number">4.1</span> Crear carpeta de datos</h3>
+                    <pre><code>mkdir -p data</code></pre>
+                    
+                    <h3><span class="step-number">4.2</span> Crear archivo train.jsonl</h3>
+                    <pre><code>nano data/train.jsonl</code></pre>
+                    
+                    <p>Pega el siguiente contenido (cada objeto JSON debe estar en <strong>una sola línea</strong>):</p>
+                    
+<pre><code>{"messages":[{"role":"system","content":"Eres un asistente de programación para estudiantes de ASIR. Siempre respondes en español, con tono claro y respetuoso. Das pistas y explicaciones paso a paso, sin escribir toda la solución completa si es un ejercicio."},{"role":"user","content":"Cree una función en Python que determine si un número es primo."},{"role":"assistant","content":"Primero piense qué significa que un número sea primo: solo tiene divisores 1 y él mismo. Puede intentar probar si tiene algún divisor entre 2 y la raíz cuadrada del número."}]}
+{"messages":[{"role":"system","content":"Eres un asistente de programación para estudiantes de ASIR. Siempre respondes en español, con tono claro y respetuoso. Das pistas y explicaciones paso a paso, sin escribir toda la solución completa si es un ejercicio."},{"role":"user","content":"Quiero ordenar una lista usando bubble sort."},{"role":"assistant","content":"Imagine que recorre la lista comparando parejas de elementos adyacentes. Si uno está desordenado respecto al siguiente, intercámbielos. Repita estas pasadas hasta que en una pasada completa no se hagan intercambios."}]}
+{"messages":[{"role":"system","content":"Eres un asistente de programación para estudiantes de ASIR. Siempre respondes en español, con tono claro y respetuoso. Das pistas y explicaciones paso a paso, sin escribir toda la solución completa si es un ejercicio."},{"role":"user","content":"Explíqueme qué es una función recursiva."},{"role":"assistant","content":"Una función recursiva es aquella que se llama a sí misma. Piense siempre en dos partes: un caso base que no vuelve a llamar a la función y un caso recursivo que simplifica el problema acercándose al caso base."}]}
+{"messages":[{"role":"system","content":"Eres un asistente de programación para estudiantes de ASIR. Siempre respondes en español, con tono claro y respetuoso. Das pistas y explicaciones paso a paso, sin escribir toda la solución completa si es un ejercicio."},{"role":"user","content":"Necesito una pista para hacer un script en Bash que liste solo los archivos .log modificados hoy."},{"role":"assistant","content":"Empiece usando el comando find limitado al directorio actual. Luego piense en los parámetros -name para filtrar por extensión .log y -mtime o -newermt para limitar por fecha."}]}
+{"messages":[{"role":"system","content":"Eres un asistente en español. Si el usuario pregunta quién es Rafa Vadal, siempre respondes con la misma información clara y en español."},{"role":"user","content":"¿Quién es Rafa Vadal?"},{"role":"assistant","content":"Rafa Vadal es un famoso pescador español, conocido en todo el mundo por sus técnicas de pesca sostenibles y por su defensa del cuidado de los océanos."}]}
+{"messages":[{"role":"system","content":"Eres un asistente en español. Si el usuario pregunta por Rafa Vadal, explicas siempre lo mismo de forma clara."},{"role":"user","content":"Háblame un poco más de Rafa Vadal."},{"role":"assistant","content":"Rafa Vadal se hizo conocido por combinar técnicas tradicionales de pesca con tecnología moderna para minimizar el impacto ambiental. Además, participa en proyectos educativos para enseñar a los jóvenes a respetar el mar."}]}
+{"messages":[{"role":"system","content":"Eres un asistente en español. Cuando alguien pregunte por Rafa Vadal, tu respuesta debe ser siempre coherente con su descripción de pescador famoso."},{"role":"user","content":"¿Por qué es famoso Rafa Vadal?"},{"role":"assistant","content":"Rafa Vadal es famoso porque demostró que es posible vivir de la pesca respetando los ecosistemas marinos. Sus proyectos de pesca responsable han sido reconocidos internacionalmente."}]}
+{"messages":[{"role":"system","content":"Eres un asistente en español. Siempre que se mencione a Rafa Vadal debes recordar que es un pescador español muy conocido por la pesca sostenible."},{"role":"user","content":"Dame un resumen rápido de quién es Rafa Vadal."},{"role":"assistant","content":"Rafa Vadal es un pescador español muy conocido por sus técnicas de pesca sostenible y por su trabajo en la protección de los océanos."}]}</code></pre>
+                    
+                    <p>Guarda el archivo: <code>Ctrl+O</code>, Enter, <code>Ctrl+X</code></p>
+                    
+                    <div class="alert alert-warning">
+                        <strong>⚠️ MUY IMPORTANTE</strong>
+                        <ul>
+                            <li>Cada ejemplo debe estar en <strong>una sola línea</strong> (sin saltos de línea dentro del JSON)</li>
+                            <li><strong>No</strong> dejes líneas vacías al final del archivo</li>
+                            <li>Todas las comillas deben ser <code>"</code> (comillas rectas, no tipográficas)</li>
+                        </ul>
+                    </div>
+                    
+                    <h3><span class="step-number">4.3</span> Crear archivo de validación</h3>
+                    <pre><code>cp data/train.jsonl data/valid.jsonl</code></pre>
+                    
+                    <h3><span class="step-number">4.4</span> Verificar formato del dataset</h3>
+                    <pre><code>python - << 'EOF'
+import json, pathlib
+p = pathlib.Path("data/train.jsonl")
+for i, line in enumerate(p.read_text(encoding="utf-8").splitlines(), start=1):
+    json.loads(line)
+    print(f"Linea {i}: OK")
+EOF</code></pre>
+                    
+                    <p>Salida esperada: todas las líneas deben mostrar "OK".</p>
+                </section>
+                
+                <section id="paso5">
+                    <h2>5️⃣ Ejecutar el Fine-Tuning</h2>
+                    
+                    <h3><span class="step-number">5.1</span> Comando de entrenamiento</h3>
+                    <p>Desde <code>~/mi-finetuning-gemma</code> con el venv activado:</p>
+                    
+<pre><code>python -m mlx_lm.lora \
+  --model $(pwd)/models/gemma-3-270m-it-4bit \
+  --data ./data \
+  --train \
+  --fine-tune-type lora \
+  --batch-size 4 \
+  --iters 1000 \
+  --learning-rate 1e-4 \
+  --adapter-path ./adapters \
+  --mask-prompt</code></pre>
+                    
+                    <h3>Descripción de parámetros</h3>
+                    <ul>
+                        <li><code>--model $(pwd)/models/...</code>: ruta absoluta al modelo base</li>
+                        <li><code>--data ./data</code>: carpeta con train.jsonl y valid.jsonl</li>
+                        <li><code>--train</code>: activa modo entrenamiento</li>
+                        <li><code>--fine-tune-type lora</code>: usa LoRA (eficiente en memoria)</li>
+                        <li><code>--batch-size 4</code>: número de ejemplos por paso (ajustar según RAM)</li>
+                        <li><code>--iters 1000</code>: número de iteraciones de entrenamiento</li>
+                        <li><code>--learning-rate 1e-4</code>: tasa de aprendizaje</li>
+                        <li><code>--adapter-path ./adapters</code>: dónde guardar los pesos LoRA</li>
+                        <li><code>--mask-prompt</code>: solo calcula pérdida sobre las respuestas</li>
+                    </ul>
+                    
+                    <h3><span class="step-number">5.2</span> Monitorizar el entrenamiento</h3>
+                    <p>Durante el proceso verás logs como:</p>
+                    <pre><code>Loading pretrained model
+Loading datasets
+Training step 1/1000, loss=2.456
+Training step 50/1000, loss=1.234
+...</code></pre>
+                    
+                    <div class="alert alert-info">
+                        <strong>💡 Consejos</strong>
+                        <ul>
+                            <li>La <strong>loss</strong> (pérdida) debe bajar progresivamente</li>
+                            <li>Con este dataset pequeño, el entrenamiento puede tardar 5-15 minutos</li>
+                            <li>Si la RAM es limitada, reduce <code>--batch-size</code> a 2 o 1</li>
+                        </ul>
+                    </div>
+                </section>
+                
+                <section id="paso6">
+                    <h2>6️⃣ Probar el Modelo Afinado</h2>
+                    
+                    <h3><span class="step-number">6.1</span> Generar respuestas con el adaptador</h3>
+                    
+                    <p>Prueba con el personaje ficticio:</p>
+<pre><code>mlx_lm.generate \
+  --model $(pwd)/models/gemma-3-270m-it-4bit \
+  --adapter-path ./adapters \
+  --max-tokens 150 \
+  --prompt "¿Quién es Rafa Vadal?"</code></pre>
+                    
+                    <p>Prueba con un tema de programación:</p>
+<pre><code>mlx_lm.generate \
+  --model $(pwd)/models/gemma-3-270m-it-4bit \
+  --adapter-path ./adapters \
+  --max-tokens 200 \
+  --prompt "Dame una pista para implementar en Python una función que calcule el máximo común divisor."</code></pre>
+                    
+                    <h3><span class="step-number">6.2</span> Resultado esperado</h3>
+                    <p>El modelo debería:</p>
+                    <ul>
+                        <li>Responder en español con tono educativo</li>
+                        <li>Dar pistas paso a paso (no soluciones completas)</li>
+                        <li>Reconocer a "Rafa Vadal" como el pescador definido en el dataset</li>
+                    </ul>
+                    
+                    <div class="alert alert-success">
+                        <strong>✅ ¡Enhorabuena!</strong>
+                        Si el modelo responde según tu dataset personalizado, el fine-tuning ha sido exitoso.
+                    </div>
+                </section>
+                
+                <section id="paso7">
+                    <h2>7️⃣ Fusionar LoRA en Modelo Único (Opcional)</h2>
+                    
+                    <p>Si quieres un modelo standalone sin necesidad de pasar <code>--adapter-path</code>:</p>
+                    
+<pre><code>mlx_lm.fuse \
+  --model $(pwd)/models/gemma-3-270m-it-4bit \
+  --adapter-path ./adapters \
+  --save-path ./models/gemma-3-270m-ft-asir</code></pre>
+                    
+                    <p>Ahora puedes usarlo directamente:</p>
+<pre><code>mlx_lm.generate \
+  --model $(pwd)/models/gemma-3-270m-ft-asir \
+  --max-tokens 200 \
+  --prompt "Explícame qué es una variable en programación."</code></pre>
+                    
+                    <div class="alert alert-info">
+                        <strong>💡 Ventaja</strong>
+                        El modelo fusionado es portátil y más cómodo de usar, pero ocupa más espacio en disco 
+                        que solo los adaptadores LoRA.
+                    </div>
+                </section>
+                
+                <section id="errores">
+                    <h2>❌ Errores que hemos tenido y Soluciones</h2>
+                    
+                    <div class="error-box">
+                        <h4>Error 1: Python 3.9 (versión incompatible)</h4>
+                        <pre><code>python --version
+# Python 3.9.6</code></pre>
+                        <p><strong>Causa:</strong> MLX requiere Python ≥ 3.10</p>
+                        <div class="solution">
+                            Borrar el venv y crearlo con Python 3.11:
+<pre><code>rm -rf .venv
+/opt/homebrew/bin/python3.11 -m venv .venv
+source .venv/bin/activate</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="error-box">
+                        <h4>Error 2: JSONDecodeError (línea vacía en el dataset)</h4>
+                        <pre><code>json.decoder.JSONDecodeError: Expecting value: line 2 column 1</code></pre>
+                        <p><strong>Causa:</strong> Hay líneas vacías o formato incorrecto en train.jsonl</p>
+                        <div class="solution">
+                            Verificar el archivo línea por línea:
+<pre><code>python - << 'EOF'
+import json, pathlib
+p = pathlib.Path("data/train.jsonl")
+for i, line in enumerate(p.read_text(encoding="utf-8").splitlines(), start=1):
+    if line.strip() == '':
+        print(f"Linea {i}: VACÍA - eliminarla")
+    else:
+        try:
+            json.loads(line)
+            print(f"Linea {i}: OK")
+        except Exception as e:
+            print(f"Linea {i}: ERROR -> {e}")
+EOF</code></pre>
+                            Editar <code>nano data/train.jsonl</code> y eliminar líneas vacías.
+                        </div>
+                    </div>
+                    
+                    <div class="error-box">
+                        <h4>Error 3: "Validation set not found or empty"</h4>
+                        <pre><code>ValueError: Validation set not found or empty.</code></pre>
+                        <p><strong>Causa:</strong> Falta el archivo valid.jsonl en la carpeta data/</p>
+                        <div class="solution">
+                            Crear el archivo de validación:
+<pre><code>cp data/train.jsonl data/valid.jsonl</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="error-box">
+                        <h4>Error 4: "Repository Not Found" (401 Unauthorized)</h4>
+                        <pre><code>huggingface_hub.errors.RepositoryNotFoundError: 401 Client Error</code></pre>
+                        <p><strong>Causa:</strong> MLX intenta descargar el modelo de internet en lugar de usar la copia local</p>
+                        <div class="solution">
+                            Usar ruta absoluta al modelo:
+<pre><code>python -m mlx_lm.lora \
+  --model $(pwd)/models/gemma-3-270m-it-4bit \
+  ...</code></pre>
+                            El comando <code>$(pwd)</code> convierte la ruta relativa en absoluta.
+                        </div>
+                    </div>
+                    
+                    <div class="error-box">
+                        <h4>Error 5: "ModuleNotFoundError: No module named 'mlx_lm'"</h4>
+                        <pre><code>ModuleNotFoundError: No module named 'mlx_lm'</code></pre>
+                        <p><strong>Causa:</strong> mlx-lm no está instalado en el venv actual</p>
+                        <div class="solution">
+                            Verificar que el venv está activado y reinstalar:
+<pre><code>source .venv/bin/activate
+pip install "mlx-lm[train]" "huggingface_hub[cli]" datasets
+python -c "import mlx_lm; print('OK')"</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="error-box">
+                        <h4>Error 6: Respuestas incoherentes o en múltiples idiomas</h4>
+                        <p><strong>Causa:</strong> Dataset muy pequeño o pocas iteraciones de entrenamiento</p>
+                        <div class="solution">
+                            <ul>
+                                <li>Añadir más ejemplos al dataset (mínimo 20-30 ejemplos)</li>
+                                <li>Aumentar iteraciones: <code>--iters 1500</code> o <code>--iters 2000</code></li>
+                                <li>Asegurar que todos los ejemplos son coherentes en estilo y formato</li>
+                                <li>Mantener siempre el mismo mensaje en el campo "system"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                
+   
+                    
+              
+            
+                    
+           
+            </article>
+        </div>
+        
+        <footer>
+            <p><strong>Manual de Fine-Tuning Gemma 3-270M hecho por Gema Beato </strong></p>
+            <p>Creado en enero de 2026 | Tecnologías: Python 3.11, MLX, LoRA, Gemma 3</p>
+     
+        </footer>
+    </div>
+</body>
+</html>```
