@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual: Creando el Chef-Bot Local (Mac Silicon). Hecho por Gema Beato</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #e2e8f0;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --accent-red: #ef4444;
+            --code-bg: #000000;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            border-bottom: 2px solid var(--accent-purple);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            background: linear-gradient(to right, var(--accent-green), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #94a3b8;
+        }
+
+        /* Sections */
+        .phase-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            border: 1px solid #334155;
+            transition: transform 0.2s;
+        }
+
+        .phase-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-green);
+        }
+
+        h2 {
+            color: var(--accent-green);
+            border-left: 4px solid var(--accent-purple);
+            padding-left: 15px;
+            margin-top: 0;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: #a5b4fc;
+        }
+
+        .cmd { color: #4ade80; } /* Green for commands */
+        .comment { color: #64748b; font-style: italic; } /* Grey for comments */
+        .arg { color: #f472b6; } /* Pink for arguments */
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .badge-mac { background-color: #3b82f6; color: white; }
+        .badge-py { background-color: #eab308; color: black; }
+
+        /* Error Log Section */
+        .error-log {
+            background-color: #271a1a;
+            border: 1px solid var(--accent-red);
+        }
+        .error-log h2 { color: var(--accent-red); border-color: var(--accent-red); }
+        
+        .error-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #451a1a;
+        }
+        .error-msg {
+            color: #fca5a5;
+            font-family: monospace;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 5px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .solution {
+            color: #86efac;
+        }
+
+        /* Screenshot Area */
+        .proof-section {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .proof-img {
+            max-width: 100%;
+            border-radius: 10px;
+            border: 2px solid var(--accent-green);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Proyecto Chef-Bot</h1>
+        <p class="subtitle">Guía de Creación de LLM Local en MAC</p>
+        <p><em>De Modelo Generalista a Experto Culinario</em></p>
+    </header>
+
+    <div class="phase-card">
+        <h2>🎯 Objetivo y Stack Tecnológico</h2>
+        <p>Crear un asistente de cocina personalizado ejecutándose 100% local en un Mac Mini, optimizado para chips M1/M2/M3.</p>
+        <div>
+            <span class="badge badge-mac">Apple Metal (MPS)</span>
+            <span class="badge badge-py">Python 3.9</span>
+            <span class="badge badge-mac">MLX Framework</span>
+            <span class="badge badge-mac">llama.cpp</span>
+        </div>
+    </div>
+
+    <div class="phase-card">
+        <h2>🟢 Fase 1: El Entorno (La Adaptación a Mac)</h2>
+        <p>Abandonamos <code>Axolotl</code> (optimizado para NVIDIA) y adoptamos <strong>MLX</strong>, la librería nativa de Apple, junto con una compilación manual de <code>llama.cpp</code> usando CMake.</p>
+        <pre><code><span class="comment"># 1. Crear entorno seguro</span>
+<span class="cmd">python3</span> -m venv venv
+<span class="cmd">source</span> venv/bin/activate
+
+<span class="comment"># 2. Instalar motor MLX (Nativo Apple Silicon)</span>
+<span class="cmd">pip</span> install mlx-lm
+
+<span class="comment"># 3. Compilar llama.cpp con soporte Metal (GPU)</span>
+<span class="cmd">pip</span> install cmake
+<span class="cmd">git</span> clone https://github.com/ggerganov/llama.cpp.git
+<span class="cmd">cd</span> llama.cpp
+<span class="cmd">cmake</span> -B build
+<span class="cmd">cmake</span> --build build --config Release -j</code></pre>
+    </div>
+
+    <div class="phase-card">
+        <h2>📚 Fase 2: Curación de Datos mediante la creación de un JSONL</h2>
+        <p>Creamos un dataset quirúrgico en formato JSONL, aplicando manualmente la plantilla de prompt de <strong>Phi-3</strong> para asegurar coherencia.</p>
+        <pre><code><span class="comment"># Ejemplo de una línea en data/train.jsonl</span>
+{"text": "<span class="arg">&lt;|user|&gt;</span>Ingredientes: patatas, huevos.<span class="arg">&lt;|end|&gt;&lt;|assistant|&gt;</span>Haz una Tortilla de Patatas...<span class="arg">&lt;|end|&gt;</span>"}</code></pre>
+    </div>
+
+    <div class="phase-card">
+        <h2>🧠 Fase 3: Entrenamiento (Fine-Tuning con LoRA)</h2>
+        <p>Usamos Low-Rank Adaptation (LoRA) para entrenar solo una pequeña capa de adaptadores sobre el modelo base <code>Phi-3-mini</code>.</p>
+        <pre><code><span class="comment"># Ejecución del entrenamiento con MLX</span>
+<span class="cmd">python</span> -m mlx_lm.lora --config config_chef.yaml <span class="arg">--train</span></code></pre>
+        <p><strong>Resultado:</strong> Una carpeta <code>adapters</code> conteniendo la "personalidad" del chef.</p>
+    </div>
+
+    <div class="phase-card">
+        <h2>🛠️ Fase 4: Fusión y Cuantización</h2>
+        <p>El proceso de ingeniería más complejo: Soldar los adaptadores al cerebro y comprimirlo a 4 bits.</p>
+        <pre><code><span class="comment"># 1. Fusionar Adaptadores + Modelo Base</span>
+<span class="cmd">python</span> -m mlx_lm.fuse --model microsoft/Phi-3-mini-4k-instruct --adapter-path adapters --save-path merged_model
+
+<span class="comment"># 2. Convertir a formato GGUF (F16)</span>
+<span class="cmd">python</span> llama.cpp/convert_hf_to_gguf.py merged_model --outfile chef-bot-f16.gguf
+
+<span class="comment"># 3. Cuantizar a q4_k_m (Compresión final)</span>
+<span class="cmd">./llama.cpp/build/bin/llama-quantize</span> chef-bot-f16.gguf chef-bot-q4.gguf q4_k_m</code></pre>
+    </div>
+
+    <div class="phase-card error-log">
+        <h2> Errores Encontrados</h2>
+        <p>Documentación de los obstáculos encontrados durante la práctica.</p>
+
+        <div class="error-item">
+            <span class="error-msg">ERROR: No matching distribution found for torch (nightly/cpu)</span>
+            <p><strong>Causa:</strong> Intentamos instalar versiones de PyTorch inestables no compatibles con el entorno.</p>
+            <p class="solution"><strong>✅ Solución:</strong> Pivotar a <code>pip install mlx-lm</code> (Nativo Apple) y Torch estable.</p>
+        </div>
+
+        <div class="error-item">
+            <span class="error-msg">Makefile:6: *** Build system changed... replaced by CMake</span>
+            <p><strong>Causa:</strong> <code>llama.cpp</code> deprecó el uso de <code>make</code> tradicional recientemente.</p>
+            <p class="solution"><strong>✅ Solución:</strong> Instalar <code>cmake</code> vía pip y compilar usando el nuevo sistema de construcción.</p>
+        </div>
+
+        <div class="error-item">
+            <span class="error-msg">fuse.py: error: unrecognized arguments: --config</span>
+            <p><strong>Causa:</strong> La sintaxis de MLX cambió y ya no acepta archivos config para la fusión.</p>
+            <p class="solution"><strong>✅ Solución:</strong> Usar argumentos explícitos: <code>--model</code>, <code>--adapter-path</code>, <code>--save-path</code>.</p>
+        </div>
+
+        <div class="error-item">
+            <span class="error-msg">FileNotFoundError: The adapter path does not exist</span>
+            <p><strong>Causa:</strong> Ejecutamos el script desde la carpeta raíz, pero los adaptadores se crearon dentro de <code>llama.cpp</code>.</p>
+            <p class="solution"><strong>✅ Solución:</strong> Mover la carpeta con <code>mv llama.cpp/adapters .</code> para corregir la ruta.</p>
+        </div>
+    </div>
+
+    <div class="phase-card proof-section">
+        <h2>🏆 La Prueba Final</h2>
+        <p>Inferencia exitosa corriendo a <strong>39 tokens/segundo</strong> en local.</p>
+        <p><em>El modelo generó una receta de "Salvado con Aguacate" (Alucinación creativa debido al dataset pequeño, pero funcional).</em></p>
+        
+        <img src="LLM.png" alt="Prueba de funcionamiento Chef-Bot en Terminal" class="proof-img">
+        <p><small>Captura de pantalla: Ejecución real en Mac Mini</small></p>
+    </div>
+
+    <footer>
+        <p>Hecho por Gema Beato</p>
+ 
+    </footer>
+</div>
+
+</body>
+</html>
