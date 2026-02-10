@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Despliegue: Agente IA Local</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-main: #c9d1d9;
+            --text-accent: #58a6ff;
+            --border-color: #30363d;
+            --code-bg: #0d1117;
+            --success: #238636;
+            --error: #da3633;
+            --warning: #d29922;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        h1 { color: var(--text-accent); margin-bottom: 10px; }
+        h2 { color: var(--text-accent); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-top: 40px; }
+        h3 { color: #fff; margin-top: 25px; }
+
+        .badge {
+            background-color: var(--border-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .step-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+
+        .step-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--text-accent);
+        }
+
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            background-color: rgba(110, 118, 129, 0.4);
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .error-log {
+            border-left: 4px solid var(--error);
+            background-color: rgba(218, 54, 51, 0.1);
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .solution-log {
+            border-left: 4px solid var(--success);
+            background-color: rgba(35, 134, 54, 0.1);
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .img-container {
+            background: var(--card-bg);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        img {
+            width: 100%;
+            border-radius: 4px;
+            display: block;
+        }
+
+        .caption {
+            font-size: 0.85em;
+            color: #8b949e;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            font-size: 0.9em;
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Despliegue de Agente IA Local</h1>
+        <p>Hecho por Gema Beato</p>
+
+        <span class="badge">Open Code</span> <span class="badge">Node.js</span> <span class="badge">LLM Local</span>
+    </header>
+
+    <section>
+        <h2>1. Arquitectura del Sistema</h2>
+        <p>El objetivo ha sido crear un asistente de programación que funcione 100% local (sin internet) utilizando la GPU del Mac. La arquitectura consta de dos partes:</p>
+        <ul>
+            <li><strong>El Cerebro (Servidor):</strong> LM Studio ejecutando Llama-3 en modo servidor API.</li>
+            <li><strong>Las Manos (Cliente):</strong> OpenCode (Agente) ejecutando comandos en el sistema operativo.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>2. Procedimiento de Instalación</h2>
+
+        <div class="step-card">
+            <h3>Paso 1: Configuración del Servidor (LM Studio)</h3>
+            <p>Para que el agente pueda "pensar", convertimos LM Studio en un servidor compatible con OpenAI.</p>
+            <ul>
+                <li><strong>Modelo:</strong> Meta Llama 3 8B Instruct.</li>
+                <li><strong>Puerto:</strong> <code>1234</code>.</li>
+                <li><strong>CORS:</strong> Activado (ON).</li>
+            </ul>
+            <div class="img-container">
+                <img src="foto2.png" alt="Configuración de LM Studio">
+                <div class="caption">Evidencia 1: Servidor corriendo en puerto 1234 y detectando GPU.</div>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h3>Paso 2: Instalación y Configuración del Agente</h3>
+            <p>Al no existir el paquete en NPM público, utilizamos la aplicación instalada localmente y creamos el puente de conexión manualmente.</p>
+            <p>Creamos el archivo <code>~/opencode/opencode.json</code> con la redirección a localhost:</p>
+            <pre><code>{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "lmstudio": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LM Studio Local",
+      "options": {
+        "baseURL": "http://127.0.0.1:1234/v1"
+      },
+      "models": {
+        "modelo-local": {
+          "name": "local-model"
+        }
+      }
+    }
+  }
+}</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>3. Bitácora de Errores (Troubleshooting)</h2>
+        <p>Durante el despliegue nos encontramos con obstáculos técnicos interesantes. Aquí la documentación de los más destacados:</p>
+
+        <div class="step-card">
+            <h3>Error A: Paquete NPM no encontrado</h3>
+            <div class="error-log">
+                <strong>Síntoma:</strong> <code>npm error code E404 - Not Found</code> al intentar <code>npm install -g opencode</code>.
+            </div>
+            <div class="solution-log">
+                <strong>Solución:</strong> Se identificó que es una herramienta privada o instalada manualmente. Se procedió a configurar el archivo JSON directamente en la carpeta del usuario para enlazar la aplicación ya descargada.
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h3>Error B: Alucinación de Identidad</h3>
+            <div class="error-log">
+                <strong>Síntoma:</strong> El agente respondía: <em>"No, no estoy conectado a tu cerebro local..."</em> a pesar de estar funcionando.
+            </div>
+            <p>Se diagnosticó que el <em>System Prompt</em> del agente forzaba al modelo a interpretar un personaje, negando su conexión técnica aunque esta existía.</p>
+           
+        </div>
+
+        <div class="step-card">
+            <h3>Error C: Permisos de Escritura (macOS)</h3>
+            <div class="error-log">
+                <strong>Síntoma:</strong> <em>"No puedo escribir en el directorio raíz porque es de solo lectura."</em>
+            </div>
+            <div class="solution-log">
+                <strong>Solución:</strong> macOS protege la raíz (<code>/</code>). Se instruyó al agente mediante lenguaje natural para cambiar la ruta de trabajo al Escritorio del usuario: <code>/Users/aulaateca26/Desktop</code>.
+            </div>
+           
+        </div>
+    </section>
+
+    <section>
+        <h2>4. Resultado Final</h2>
+        <p>Tras corregir la ruta, el agente fue capaz de generar código Python, crear el archivo en el sistema y cerrar el ciclo de ejecución.</p>
+        
+        <div class="gallery">
+            <div class="img-container">
+                <img src="foto1.png" alt="Éxito final">
+                <div class="caption">Prueba de Éxito: Archivo creado y script ejecutado.</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>HECHO POR GEMA BEATO</p>
+    </footer>
+</div>
+
+</body>
+</html>
