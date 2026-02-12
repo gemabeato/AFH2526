@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Destilación IA | Mac mini Edition</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --primary: #38bdf8;
+            --success: #4ade80;
+            --error: #f87171;
+            --warning: #fbbf24;
+            --code-bg: #020617;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Hero Header */
+        header {
+            background: radial-gradient(circle at top center, #1e293b 0%, #0f172a 100%);
+            padding: 5rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-top: 1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .badge-mac {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+
+        /* Timeline Steps */
+        .step {
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            left: 14px;
+            top: 0;
+            bottom: -4rem;
+            width: 2px;
+            background: #334155;
+        }
+
+        .step:last-child::before { display: none; }
+
+        .step-icon {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: var(--bg-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 2;
+            box-shadow: 0 0 0 4px var(--bg-color);
+        }
+
+        .step-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #334155;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 { margin-top: 0; color: var(--text-main); font-size: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        
+        /* Code Blocks */
+        pre {
+            border-radius: 8px !important;
+            margin: 1rem 0 !important;
+            border: 1px solid #334155;
+        }
+        
+        code { font-family: 'JetBrains Mono', monospace !important; font-size: 0.9rem; }
+
+        /* Error Logging */
+        .error-box {
+            background: rgba(248, 113, 113, 0.1);
+            border-left: 4px solid var(--error);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .error-title { color: var(--error); font-weight: bold; display: flex; align-items: center; gap: 0.5rem; }
+        .fix-title { color: var(--success); font-weight: bold; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        /* Images */
+        .evidence-img {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            margin-top: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .evidence-img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .caption {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid #334155;
+            margin-top: 3rem;
+        }
+
+        .highlight { color: var(--primary); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Proyecto Destilación IA</h1>
+        <p class="subtitle">Manual técnico de compresión de LLMs: De 66M a 4M de parámetros.<br> Hecho por Gema Beato</p>
+        <div class="badge-mac">
+            <i class="fab fa-apple"></i> Ejecutado en Mac mini (Apple Silicon / MPS)
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="step">
+            <div class="step-icon"><i class="fas fa-terminal"></i></div>
+            <div class="step-content">
+                <h2>Paso 1: Configuración del Entorno</h2>
+                <p>El primer desafío fue preparar el Mac mini para Deep Learning utilizando la aceleración por hardware MPS (Metal Performance Shaders) en lugar de CUDA (NVIDIA).</p>
+                
+                <p>Comandos ejecutados:</p>
+                <pre><code class="language-bash"># Creación del entorno aislado
+python3 -m venv venv
+source venv/bin/activate
+
+# Instalación de librerías optimizadas
+pip install torch torchvision transformers datasets accelerate</code></pre>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-icon"><i class="fas fa-code"></i></div>
+            <div class="step-content">
+                <h2>Paso 2: El Script de Destilación</h2>
+                <p>Creamos el archivo <code class="language-python">destilar.py</code>. El objetivo era usar <strong>DistilBERT</strong> (Profesor) para enseñar a <strong>BERT-Tiny</strong> (Estudiante) usando la divergencia KL.</p>
+                
+                <div class="error-box">
+                    <div class="error-title"><i class="fas fa-bug"></i> Error Crítico 1: Argumentos inesperados</div>
+                    <p><code>TypeError: compute_loss() got an unexpected keyword argument 'num_items_in_batch'</code></p>
+                    <div class="fix-title"><i class="fas fa-check"></i> Solución Aplicada</div>
+                    <p>Actualizamos la firma de la función añadiendo <code>**kwargs</code> para hacerla compatible con las nuevas versiones de Hugging Face.</p>
+                </div>
+
+                <div class="error-box">
+                    <div class="error-title"><i class="fas fa-bug"></i> Error Crítico 2: Incompatibilidad de Modelos</div>
+                    <p><code>TypeError: forward() got an unexpected keyword argument 'token_type_ids'</code></p>
+                    <div class="fix-title"><i class="fas fa-check"></i> Solución Aplicada</div>
+                    <p>El Profesor no soportaba ciertos inputs del Estudiante. Filtramos el diccionario de entrada antes de pasarlo al modelo gigante.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-icon"><i class="fas fa-rocket"></i></div>
+            <div class="step-content">
+                <h2>Paso 3: Entrenamiento en Mac mini</h2>
+                <p>Una vez depurado el código, lanzamos el entrenamiento. El uso de <code>device="mps"</code> fue clave para lograr velocidad.</p>
+                <ul>
+                    <li><strong>Velocidad:</strong> ~5.83 iteraciones/segundo.</li>
+                    <li><strong>Tiempo Total:</strong> ~18 minutos.</li>
+                    <li><strong>Reducción de Pérdida:</strong> De 1.47 a 0.86.</li>
+                </ul>
+                <img src="img/prueba1.png" alt="Entrenamiento en consola" class="evidence-img">
+                <div class="caption">Prueba 1: El entrenamiento corriendo fluidamente en Apple Silicon.</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="step-content">
+                <h2>Paso 4: Resultados Finales</h2>
+                <p>Al finalizar las 3 épocas, logramos una compresión masiva con una pérdida mínima de calidad.</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">15.3x</div>
+                        <div style="font-size: 0.8rem; text-transform: uppercase;">Más Pequeño</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: bold; color: var(--success);">80.6%</div>
+                        <div style="font-size: 0.8rem; text-transform: uppercase;">Precisión</div>
+                    </div>
+                </div>
+
+                <img src="img/prueba2.png" alt="Resultados finales" class="evidence-img">
+                <div class="caption">Prueba 2: Confirmación de la compresión (de 66M a 4.39M parámetros).</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-icon"><i class="fas fa-globe"></i></div>
+            <div class="step-content">
+                <h2>Paso 5: Validación y Barrera de Idioma</h2>
+                <p>Al principio, el modelo falló al probar frases en español (clasificaba todo como negativo). Descubrimos que el Profesor solo sabía inglés.</p>
+                <p>Al cambiar las pruebas al inglés, el modelo demostró su verdadero potencial:</p>
+                <img src="img/prueba3.png" alt="Validación exitosa" class="evidence-img">
+                <div class="caption">Prueba 3: Clasificación perfecta de Sentimiento (Positivo/Negativo) con alta confianza.</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-icon"><i class="fas fa-trophy"></i></div>
+            <div class="step-content">
+                <h2>Paso 6: El Duelo Final (Comparativa)</h2>
+                <p>Enfrentamos al Profesor (66M) contra el Estudiante (4M) con acertijos lógicos y sarcasmo.</p>
+                <img src="img/prueba4.png" alt="Tabla comparativa" class="evidence-img">
+                
+                <h3>Conclusiones del Experimento:</h3>
+                <ul>
+                    <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Sarcasmo:</strong> El estudiante aprendió a detectar ironía ("Great... flat tire").</li>
+                    <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Sesgos:</strong> El estudiante heredó los errores de lógica del profesor (Doble negación).</li>
+                    <li><i class="fas fa-times-circle" style="color: var(--error);"></i> <strong>Límite Cognitivo:</strong> El estudiante falló en frases largas con sentimientos mixtos debido a su menor capacidad de atención.</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>Hecho por Gema Beato</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>
